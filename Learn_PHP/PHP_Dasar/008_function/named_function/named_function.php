@@ -1,6 +1,6 @@
 <?php
 
-// named function
+// named function with spread operator
 function countApple(...$dataFruit): int
 {
     $count = 0;
