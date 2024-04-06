@@ -5,7 +5,7 @@ require_once '../Connection/connection.php';
 echo "Selamat Datang di Layanan Kami" . PHP_EOL;
 
 // Create
-function create($pdo): void
+function create($dbh): void
 {
     echo "Masukkan nama Anda: ";
     $nama = trim(fgets(STDIN)) . PHP_EOL;
@@ -13,16 +13,16 @@ function create($pdo): void
     echo "Masukkan email Anda: ";
     $email = trim(fgets(STDIN)) . PHP_EOL;
 
-    $user = $pdo->prepare("INSERT INTO users (nama, email) VALUES (:nama, :email)");
+    $user = $dbh->prepare("INSERT INTO users (nama, email) VALUES (:nama, :email)");
     $user->execute(compact("nama", "email"));
     echo "User baru berhasil ditambahkan";
 }
 
 
 // Read
-function read($pdo): void
+function read($dbh): void
 {
-    $getUsers = $pdo->query("SELECT * FROM users");
+    $getUsers = $dbh->query("SELECT * FROM users");
     $users = $getUsers->fetchAll(PDO::FETCH_ASSOC);
     if (!$users) {
         echo "Tidak ada user untuk ditampilkan";
@@ -38,11 +38,11 @@ function read($pdo): void
 
 
 // Update
-function update($pdo): void
+function update($dbh): void
 {
     echo "Masukkan id user yang ingin di ubah: ";
     $id = intval(trim(fgets(STDIN)));
-    $checkUser = $pdo->query("SELECT * FROM users WHERE id = $id")->fetch();
+    $checkUser = $dbh->query("SELECT * FROM users WHERE id = $id")->fetch();
     if (!$checkUser) {
         die("Mohon maaf user tidak ada dalam database");
     }
@@ -50,18 +50,18 @@ function update($pdo): void
     $nama = trim(fgets(STDIN)) . PHP_EOL;
     echo "Masukkan email baru: ";
     $email = trim(fgets(STDIN)) . PHP_EOL;
-    $user = $pdo->prepare("UPDATE users SET nama = :nama, email = :email WHERE id = :id");
+    $user = $dbh->prepare("UPDATE users SET nama = :nama, email = :email WHERE id = :id");
     $user->execute(compact("id", "nama", "email"));
     echo "Data user berhasil diperbarui";
 }
 
 
 // Delete
-function delete($pdo): void
+function delete($dbh): void
 {
     echo "Pilih id user yang ingin dihapus: ";
     $id = intval(trim(fgets(STDIN))) . PHP_EOL;
-    $checkUser = $pdo->query("SELECT * FROM users WHERE id = $id")->fetch();
+    $checkUser = $dbh->query("SELECT * FROM users WHERE id = $id")->fetch();
     if (!$checkUser) {
         die("Mohon maaf user tidak ada dalam database");
     }
@@ -69,7 +69,7 @@ function delete($pdo): void
     $answer = trim(fgets(STDIN));
     switch ($answer) {
         case "Ya":
-            $pdo->query("DELETE FROM users WHERE id = $id");
+            $dbh->query("DELETE FROM users WHERE id = $id");
             echo "Data user berhasil dihapus";
             break;
         case "Tidak":
@@ -77,7 +77,7 @@ function delete($pdo): void
     }
 }
 
-// create($pdo);
-// read($pdo);
-// update($pdo);
-// delete($pdo);
+// create($dbh);
+// read($dbh);
+// update($dbh);
+// delete($dbh);
